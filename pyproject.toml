@@ -4,6 +4,8 @@ version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
     "django>=6.1.2",
+    "django-ninja>=1.7.3",
+    "django-ninja-extra>=0.31.7",
     "psycopg[binary]>=3.3.6",
     "pydantic>=2.14.2",
     "pydantic-settings>=2.16.2",
