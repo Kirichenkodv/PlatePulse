@@ -1,14 +1,11 @@
-from .config import BASE_DIR, settings_env
+from .config import settings_env
 
 SECRET_KEY = settings_env.SECRET_KEY
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings_env.DEBUG
 
 ALLOWED_HOSTS = settings_env.ALLOWED_HOSTS
 
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -49,19 +46,17 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": settings_env.db.NAME,
+        "USER": settings_env.db.USER,
+        "PASSWORD": settings_env.db.PASSWORD,
+        "HOST": settings_env.db.HOST,
+        "PORT": settings_env.db.PORT,
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -79,9 +74,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.1/topics/i18n/
-
 LANGUAGE_CODE = "ru"
 
 TIME_ZONE = "UTC"
@@ -91,17 +83,18 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.1/howto/static-files/
-
 STATIC_URL = "static/"
 
-
-# Email
-# https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
 MAILERS = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": settings_env.redis.url,
+    }
 }
