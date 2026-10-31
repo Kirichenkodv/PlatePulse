@@ -29,6 +29,12 @@ class RedisSettings(BaseModel):
         return f"redis://{self.HOST}:{self.PORT}/{self.DB}"
 
 
+class ApiConfig(BaseModel):
+    TITLE: str = "PlatePulse"
+    DESCRIPTION: str = "Приложение для учёта, планирования меню на неделю."
+    VERSION: str = "0.1.0"
+
+
 class AppSetting(BaseSettings):
     DEBUG: bool = False
     SECRET_KEY: str = Field(default=...)
@@ -36,6 +42,7 @@ class AppSetting(BaseSettings):
 
     db: DatabaseSettings
     redis: RedisSettings = Field(default_factory=RedisSettings)
+    api: ApiConfig = Field(default_factory=ApiConfig)
 
     @field_validator("ALLOWED_HOSTS", mode="before")
     @classmethod

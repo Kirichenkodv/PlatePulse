@@ -2,16 +2,19 @@ from django.db import connection
 from django.db.utils import OperationalError
 from ninja_extra import NinjaExtraAPI
 
+from .config import settings_env
+
 api = NinjaExtraAPI(
-    title="PlatePulse",
-    description="Приложение для учёта, планирования меню на неделю.",
-    version="0.1.0",
+    title=settings_env.api.TITLE,
+    description=settings_env.api.DESCRIPTION,
+    version=settings_env.api.VERSION,
 )
 
 
 @api.get(
     "/health",
     tags=["system"],
+    description="Проверяет подключение к базе данных",
     auth=None,
 )
 def health(request):
