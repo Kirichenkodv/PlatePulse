@@ -23,7 +23,7 @@
 | ----- | ----- | ----- |
 | Household (семья) | Рабочее пространство, владелец всех данных | name |
 | Member (участник) | Пользователь внутри семьи | user, household, role |
-| Goal (цель) | Норма КБЖУ участника, меняется со временем | member, kcal, protein, fat, carbs, valid_from |  
+| Goal (цель) | Норма КБЖУ участника, меняется со временем | member, kcal, protein, fat, carbs, valid_from |
 | Product (продукт) | КБЖУ на 100 г и как он продаётся | name, kcal/protein/fat/carbs per 100 g, category (отдел магазина), pack_grams, barcode, source |
 | Recipe (рецепт) | Блюдо и правила его хранения | name, tags (завтрак, обед…), cooked_weight_g, fridge_days, freezable |
 | RecipeIngredient | Состав рецепта в сыром весе | recipe, product, grams |
