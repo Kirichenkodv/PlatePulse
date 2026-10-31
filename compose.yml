@@ -34,6 +34,29 @@ services:
       retries: 5
     restart: unless-stopped
 
+  app:
+    build: .
+    container_name: place-pulse-app
+    env_file: .env
+    environment:
+      DB__HOST: db
+      REDIS__HOST: redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/.venv
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+          interval: 15s
+          timeout: 5s
+          retries: 3
+
+
 volumes:
   pgdata:
   redisdata:
