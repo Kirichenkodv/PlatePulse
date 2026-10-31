@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# Секреты (передаются через env/compose, не в образ)
+.env
+.env.*
+!.env.example
+
+# Локальное окружение (в образе свой .venv от uv sync)
+.venv
+
+# Кеши Python и инструментов
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Локальная БД
+db.sqlite3
+db.sqlite3-journal
+
+# Docker
+dockerfile
+Dockerfile
+compose.yml
+.dockerignore
+
+# Инструменты разработки, IDE, документация
+.pre-commit-config.yaml
+.idea/
+.vscode/
+*.md
+LICENSE
