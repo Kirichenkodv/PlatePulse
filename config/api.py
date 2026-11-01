@@ -1,5 +1,5 @@
 from django.db import connection
-from django.db.utils import OperationalError
+from django.db.utils import DatabaseError
 from ninja_extra import NinjaExtraAPI
 
 from .config import settings_env
@@ -21,7 +21,7 @@ def health(request):
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
-    except OperationalError:
+    except DatabaseError:
         return api.create_response(
             request,
             {"status": "error", "database": "unavailable"},
