@@ -16,7 +16,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.9.5 /uv /uvx /bin/
 
 # сначала только зависимости — этот слой кешируется
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-install-project
+RUN uv sync --locked --no-install-project --no-dev
 
 # потом код
 COPY manage.py ./
