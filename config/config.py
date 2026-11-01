@@ -40,7 +40,7 @@ class ApiConfig(BaseModel):
 class AppSetting(BaseSettings):
     DEBUG: bool = False
     SECRET_KEY: str = Field(default=...)
-    ALLOWED_HOSTS: Annotated[list[str], NoDecode] = ["*"]
+    ALLOWED_HOSTS: Annotated[list[str], NoDecode] = []
 
     db: DatabaseSettings
     redis: RedisSettings = Field(default_factory=RedisSettings)
