@@ -28,6 +28,6 @@ def health(request):
             status=503,
         )
     return {
-        "stauts": "ok",
+        "status": "ok",
         "database": "ok",
     }
