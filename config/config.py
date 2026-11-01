@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import quote
 
 from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -25,7 +26,8 @@ class RedisSettings(BaseModel):
     @property
     def url(self) -> str:
         if self.PASSWORD:
-            return f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}"
+            password = quote(self.PASSWORD, safe="")
+            return f"redis://:{password}@{self.HOST}:{self.PORT}/{self.DB}"
         return f"redis://{self.HOST}:{self.PORT}/{self.DB}"
 
 
