@@ -34,4 +34,5 @@ django_settings_module = "config.settings"
 [tool.basedpyright]
 venvPath = "."
 venv = ".venv"
+pythonVersion = "3.14"
 typeCheckingMode = "basic"
