@@ -9,3 +9,16 @@ class RegisterIn(Schema):
 class TokenOut(Schema):
     access: str
     refresh: str
+
+
+class LoginIn(Schema):
+    email: str
+    password: str
+
+
+class RefreshIn(Schema):
+    refresh: str
+
+
+class RefreshOut(Schema):
+    access: str
