@@ -1,3 +1,5 @@
+from typing import Any
+
 from .config import settings_env
 
 SECRET_KEY = settings_env.SECRET_KEY
@@ -15,6 +17,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ninja_extra",
+    "ninja_jwt",
+    "ninja_jwt.token_blacklist",
+    "apps.auth",
 ]
 
 MIDDLEWARE = [
@@ -99,3 +104,6 @@ CACHES = {
         "LOCATION": settings_env.redis.url,
     }
 }
+
+
+NINJA_JWT: dict[str, Any] = {}
