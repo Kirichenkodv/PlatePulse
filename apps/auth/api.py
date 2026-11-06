@@ -2,20 +2,16 @@ from django.contrib.auth import get_user_model
 from ninja_extra import Router
 from ninja_jwt.tokens import RefreshToken
 
-from .schemas import TokenOut, UserIn
+from .schemas import RegisterIn, TokenOut
 
 User = get_user_model()
 router = Router(
     tags=["auth"],
 )
 
-# @router.get("/", tags=['auth'])
-# def Hello(request):
-#     return {"message": "hello"}
-
 
 @router.post("register/", response=TokenOut)
-def register(request, data: UserIn):
+def register(request, data: RegisterIn):
     user = User.objects.create_user(  # pyright: ignore[reportAttributeAccessIssue]
         email=data.email,
         password=data.password,

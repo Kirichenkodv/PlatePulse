@@ -1,7 +1,7 @@
 from ninja import Schema
 
 
-class UserIn(Schema):
+class RegisterIn(Schema):
     email: str
     password: str
 
