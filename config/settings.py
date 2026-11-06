@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Any
 
 from .config import settings_env
@@ -108,4 +109,10 @@ CACHES = {
 
 AUTH_USER_MODEL = "users.Customuser"
 
-NINJA_JWT: dict[str, Any] = {}
+NINJA_JWT: dict[str, Any] = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": settings_env.SECRET_KEY,
+    "AUTH_HEADER_TYPES": "Bearer",
+}
