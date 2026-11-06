@@ -23,6 +23,7 @@ dev = [
 
 [tool.ruff]
 extend-exclude = ["**/migrations/**"]
+force-exclude = true
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main", "pydantic.mypy"]

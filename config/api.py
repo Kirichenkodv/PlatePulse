@@ -2,6 +2,8 @@ from django.db import connection
 from django.db.utils import DatabaseError
 from ninja_extra import NinjaExtraAPI
 
+from apps.auth.api import router as auth_router
+
 from .config import settings_env
 
 api = NinjaExtraAPI(
@@ -31,3 +33,9 @@ def health(request):
         "status": "ok",
         "database": "ok",
     }
+
+
+api.add_router(
+    "auth/",
+    auth_router,
+)

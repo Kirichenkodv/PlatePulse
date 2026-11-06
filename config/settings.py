@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "ninja_extra",
     "ninja_jwt",
     "ninja_jwt.token_blacklist",
+    "apps.users",
     "apps.auth",
 ]
 
@@ -105,5 +106,6 @@ CACHES = {
     }
 }
 
+AUTH_USER_MODEL = "users.Customuser"
 
 NINJA_JWT: dict[str, Any] = {}
