@@ -3,7 +3,7 @@ from ninja.errors import HttpError
 from ninja_extra import Router
 from ninja_jwt.tokens import RefreshToken
 
-from .schemas import LoginIn, RegisterIn, TokenOut
+from .schemas import LoginIn, RefreshIn, RefreshOut, RegisterIn, TokenOut
 
 User = get_user_model()
 router = Router(
@@ -28,3 +28,10 @@ def get_token(request, data: LoginIn):
         raise HttpError(401, "Неверный email или password")
     refresh = RefreshToken.for_user(user)  # type: ignore[misc]
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
+
+
+@router.post("refresh/", response=RefreshOut)
+def refresh_token(request, data: RefreshIn):
+    refresh = RefreshToken(data.refresh)
+    access = str(refresh.access_token)
+    return {"access": access}
