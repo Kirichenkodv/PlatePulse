@@ -1,0 +1,6 @@
+from django.apps import AppConfig
+
+
+class HouseholdConfig(AppConfig):
+    name = "apps.household"
+    label = "household"
