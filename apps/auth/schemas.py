@@ -3,6 +3,7 @@ from typing import Any
 from ninja import Schema
 from pydantic import (
     EmailStr,
+    Field,
     ValidationError,
     ValidatorFunctionWrapHandler,
     field_validator,
@@ -11,8 +12,16 @@ from pydantic_core import PydanticCustomError
 
 
 class RegisterIn(Schema):
-    email: EmailStr
-    password: str
+    email: EmailStr = Field(
+        ...,
+        min_length=1,
+        max_length=254,
+    )
+    password: str = Field(
+        ...,
+        min_length=1,
+        max_length=254,
+    )
 
     @field_validator("email", mode="wrap")
     @classmethod
