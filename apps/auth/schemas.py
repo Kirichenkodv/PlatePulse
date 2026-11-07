@@ -22,3 +22,8 @@ class RefreshIn(Schema):
 
 class RefreshOut(Schema):
     access: str
+
+
+class ErrorOut(Schema):
+    code: str
+    message: str

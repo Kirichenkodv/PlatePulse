@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, get_user_model
+from jwt.exceptions import ExpiredSignatureError
 from ninja.errors import HttpError
 from ninja_extra import Router
+from ninja_jwt.exceptions import TokenError
 from ninja_jwt.tokens import RefreshToken
 
-from .schemas import LoginIn, RefreshIn, RefreshOut, RegisterIn, TokenOut
+from .schemas import ErrorOut, LoginIn, RefreshIn, RefreshOut, RegisterIn, TokenOut
 
 User = get_user_model()
 router = Router(
@@ -30,8 +32,25 @@ def get_token(request, data: LoginIn):
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
 
-@router.post("refresh/", response=RefreshOut)
+@router.post(
+    "refresh/",
+    response={200: RefreshOut, 401: ErrorOut},
+)
 def refresh_token(request, data: RefreshIn):
-    refresh = RefreshToken(data.refresh)
-    access = str(refresh.access_token)
-    return {"access": access}
+    try:
+        refresh = RefreshToken(data.refresh)
+    except TokenError as exc:
+        cause = exc.__cause__
+
+        if isinstance(cause, ExpiredSignatureError):
+            return 401, {
+                "code": "refresh_expired",
+                "message": "Срок действия refresh-токена истёк",
+            }
+
+        return 401, {
+            "code": "refresh_invalid",
+            "message": "Refresh-токен недействителен",
+        }
+
+    return 200, {"access": str(refresh.access_token)}
