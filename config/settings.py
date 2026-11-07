@@ -1,3 +1,5 @@
+from typing import Any
+
 from .config import settings_env
 
 SECRET_KEY = settings_env.SECRET_KEY
@@ -15,6 +17,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ninja_extra",
+    "ninja_jwt",
+    "ninja_jwt.token_blacklist",
+    "apps.users",
+    "apps.auth",
 ]
 
 MIDDLEWARE = [
@@ -64,7 +70,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": ("django.contrib.auth.password_validation.MinimumLengthValidator"),
+        "OPTIONS": {"min_length": 8},
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
@@ -98,4 +105,14 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": settings_env.redis.url,
     }
+}
+
+AUTH_USER_MODEL = "users.Customuser"
+
+NINJA_JWT: dict[str, Any] = {
+    "ACCESS_TOKEN_LIFETIME": settings_env.jwt.ACCESS_TOKEN_LIFETIME,
+    "REFRESH_TOKEN_LIFETIME": settings_env.jwt.REFRESH_TOKEN_LIFETIME,
+    "ALGORITHM": settings_env.jwt.ALGORITHM,
+    "SIGNING_KEY": settings_env.SECRET_KEY,
+    "AUTH_HEADER_TYPES": settings_env.jwt.AUTH_HEADER_TYPES,
 }

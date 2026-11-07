@@ -19,8 +19,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-install-project --no-dev
 
 # потом код
-COPY manage.py ./
-COPY config/ ./config/
+COPY . .
 
 EXPOSE 8000
 

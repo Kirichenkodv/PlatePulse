@@ -3,25 +3,37 @@ name = "PlatePulse"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
-    "django>=6.1.2",
-    "django-ninja>=1.7.3",
-    "django-ninja-extra>=0.31.7",
-    "psycopg[binary]>=3.3.6",
-    "pydantic>=2.14.2",
-    "pydantic-settings>=2.16.2",
-    "redis[hiredis]>=8.1.0",
+  "django>=6.1.2",
+  "django-ninja>=1.7.3",
+  "django-ninja-extra>=0.31.7",
+  "django-ninja-jwt>=5.4.5",
+  "psycopg[binary]>=3.3.6",
+  "pydantic>=2.14.2",
+  "pydantic-settings>=2.16.2",
+  "redis[hiredis]>=8.1.0",
+  "pydantic[email]>=2.14.2",
 ]
 
 [dependency-groups]
 dev = [
-    "django-stubs>=6.1.2",
-    "mypy>=2.4.1",
-    "pre-commit>=4.7.0",
-    "ruff>=0.17.3",
+  "django-stubs>=6.1.2",
+  "mypy>=2.4.1",
+  "pre-commit>=4.7.0",
+  "ruff>=0.17.3",
 ]
+
+[tool.ruff]
+extend-exclude = ["**/migrations/**"]
+force-exclude = true
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
 
 [tool.django-stubs]
 django_settings_module = "config.settings"
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.14"
+typeCheckingMode = "basic"

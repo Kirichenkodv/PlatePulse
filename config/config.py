@@ -1,3 +1,4 @@
+from datetime import timedelta
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
@@ -37,6 +38,14 @@ class ApiConfig(BaseModel):
     VERSION: str = "0.1.0"
 
 
+class JwtConfig(BaseModel):
+    ACCESS_TOKEN_LIFETIME: timedelta = timedelta(minutes=5)
+    REFRESH_TOKEN_LIFETIME: timedelta = timedelta(days=1)
+    ALGORITHM: str = "HS256"
+    # SIGNING_KEY: str = "sectet_key_local"
+    AUTH_HEADER_TYPES: str = "Bearer"
+
+
 class AppSetting(BaseSettings):
     DEBUG: bool = False
     SECRET_KEY: str = Field(default=...)
@@ -45,6 +54,7 @@ class AppSetting(BaseSettings):
     db: DatabaseSettings
     redis: RedisSettings = Field(default_factory=RedisSettings)
     api: ApiConfig = Field(default_factory=ApiConfig)
+    jwt: JwtConfig = Field(default_factory=JwtConfig)
 
     @field_validator("ALLOWED_HOSTS", mode="before")
     @classmethod
