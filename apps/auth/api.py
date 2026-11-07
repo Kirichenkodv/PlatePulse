@@ -5,7 +5,14 @@ from ninja_extra import Router
 from ninja_jwt.exceptions import TokenError
 from ninja_jwt.tokens import RefreshToken
 
-from .schemas import ErrorOut, LoginIn, RefreshIn, RefreshOut, RegisterIn, TokenOut
+from .schemas import (
+    ErrorOut,
+    LoginIn,
+    RefreshIn,
+    RefreshOut,
+    RegisterIn,
+    TokenOut,
+)
 
 User = get_user_model()
 router = Router(
@@ -13,14 +20,25 @@ router = Router(
 )
 
 
-@router.post("register/", response=TokenOut)
+@router.post(
+    "register/",
+    response={
+        200: TokenOut,
+        409: ErrorOut,
+    },
+)
 def register(request, data: RegisterIn):
+    if User.objects.filter(email=data.email).exists():
+        return 409, {
+            "code": "email exists",
+            "message": "Пользователь с таким email существует",
+        }
     user = User.objects.create_user(  # pyright: ignore[reportAttributeAccessIssue]
         email=data.email,
         password=data.password,
     )
     refresh = RefreshToken.for_user(user)  # type: ignore[misc]
-    return {"access": str(refresh.access_token), "refresh": str(refresh)}
+    return 200, {"access": str(refresh.access_token), "refresh": str(refresh)}
 
 
 @router.post("token/", response=TokenOut)
