@@ -47,17 +47,18 @@ def register(request, data: RegisterIn):
                 email=data.email,
                 password=data.password,
             )
-        refresh = RefreshToken.for_user(user)  # type: ignore[misc]
-        return 200, {
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-        }
     except IntegrityError:
         if User.objects.filter(email=data.email).exists():
             return 409, {
                 "code": "email exists",
                 "message": "Пользователь с таким email существует",
             }
+        raise
+    refresh = RefreshToken.for_user(user)  # type: ignore[misc]
+    return 200, {
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+    }
 
 
 @router.post("token/", response=TokenOut)
