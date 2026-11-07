@@ -7,6 +7,13 @@ class HouseHold(models.Model):
     name = models.CharField(verbose_name="Название семьи", unique=True)
     created_at = models.DateTimeField(verbose_name="время создания семьи")
 
+    def __str__(self) -> str:
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Семья"
+        verbose_name_plural = "Семьи"
+
 
 class HouseHoldInvite(models.Model):
     household = models.ForeignKey(
