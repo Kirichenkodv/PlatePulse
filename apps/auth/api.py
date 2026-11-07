@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db import IntegrityError, transaction
 from jwt.exceptions import ExpiredSignatureError
 from ninja.errors import HttpError
 from ninja_extra import Router
@@ -31,12 +32,6 @@ router = Router(
     },
 )
 def register(request, data: RegisterIn):
-    if User.objects.filter(email=data.email).exists():
-        return 409, {
-            "code": "email exists",
-            "message": "Пользователь с таким email существует",
-        }
-
     candidate = User(email=data.email)
     try:
         validate_password(data.password, user=candidate)
@@ -46,15 +41,23 @@ def register(request, data: RegisterIn):
             "message": " ".join(exc.messages),
         }
 
-    user = User.objects.create_user(  # pyright: ignore[reportAttributeAccessIssue]
-        email=data.email,
-        password=data.password,
-    )
-    refresh = RefreshToken.for_user(user)  # type: ignore[misc]
-    return 200, {
-        "access": str(refresh.access_token),
-        "refresh": str(refresh),
-    }
+    try:
+        with transaction.atomic():
+            user = User.objects.create_user(  # pyright: ignore[reportAttributeAccessIssue]
+                email=data.email,
+                password=data.password,
+            )
+        refresh = RefreshToken.for_user(user)  # type: ignore[misc]
+        return 200, {
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }
+    except IntegrityError:
+        if User.objects.filter(email=data.email).exists():
+            return 409, {
+                "code": "email exists",
+                "message": "Пользователь с таким email существует",
+            }
 
 
 @router.post("token/", response=TokenOut)
