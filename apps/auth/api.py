@@ -71,23 +71,31 @@ def get_token(request, data: LoginIn):
 
 @router.post(
     "refresh/",
-    response={200: RefreshOut, 401: ErrorOut},
+    response={
+        200: RefreshOut,
+        401: ErrorOut,
+    },
 )
 def refresh_token(request, data: RefreshIn):
     try:
         refresh = RefreshToken(data.refresh)
     except TokenError as exc:
-        cause = exc.__cause__
+        cause: BaseException | None = exc
 
-        if isinstance(cause, ExpiredSignatureError):
-            return 401, {
-                "code": "refresh_expired",
-                "message": "Срок действия refresh-токена истёк",
-            }
+        while cause is not None:
+            if isinstance(cause, ExpiredSignatureError):
+                return 401, {
+                    "code": "refresh_expired",
+                    "message": "Срок действия refresh-токена истёк",
+                }
+
+            cause = cause.__cause__
 
         return 401, {
             "code": "refresh_invalid",
             "message": "Refresh-токен недействителен",
         }
 
-    return 200, {"access": str(refresh.access_token)}
+    return 200, {
+        "access": str(refresh.access_token),
+    }
