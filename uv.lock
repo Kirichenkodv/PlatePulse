@@ -603,7 +603,7 @@ dependencies = [
     { name = "django-ninja-extra" },
     { name = "django-ninja-jwt" },
     { name = "psycopg", extra = ["binary"] },
-    { name = "pydantic" },
+    { name = "pydantic", extra = ["email"] },
     { name = "pydantic-settings" },
     { name = "redis", extra = ["hiredis"] },
 ]
@@ -613,7 +613,6 @@ dev = [
     { name = "django-stubs" },
     { name = "mypy" },
     { name = "pre-commit" },
-    { name = "pydantic", extra = ["email"] },
     { name = "ruff" },
 ]
 
@@ -625,6 +624,7 @@ requires-dist = [
     { name = "django-ninja-jwt", specifier = ">=5.4.5" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.6" },
     { name = "pydantic", specifier = ">=2.14.2" },
+    { name = "pydantic", extras = ["email"], specifier = ">=2.14.2" },
     { name = "pydantic-settings", specifier = ">=2.16.2" },
     { name = "redis", extras = ["hiredis"], specifier = ">=8.1.0" },
 ]
@@ -634,7 +634,6 @@ dev = [
     { name = "django-stubs", specifier = ">=6.1.2" },
     { name = "mypy", specifier = ">=2.4.1" },
     { name = "pre-commit", specifier = ">=4.7.0" },
-    { name = "pydantic", extras = ["email"], specifier = ">=2.14.2" },
     { name = "ruff", specifier = ">=0.17.3" },
 ]
 
