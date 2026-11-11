@@ -1,6 +1,6 @@
 import hashlib
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import transaction
 from ninja_extra import Router
@@ -84,7 +84,7 @@ def add_household_invite(request, data: InviteIn):
         invite_by=user_owner,
         token_hash=token_hash,
         created_at=datetime.now(),
-        # expired_at: datetime
+        expired_at=datetime.now() + timedelta(hours=24),
         # revoke_at: datetime
     )
     return 200, invite
