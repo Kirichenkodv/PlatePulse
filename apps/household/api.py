@@ -9,7 +9,6 @@ from ninja_jwt.authentication import JWTAuth
 from apps.common.schemas import ErrorSchema
 from apps.household.models import HouseHold, HouseHoldInvite
 from apps.household.schemas import (
-    AcceptSchema,
     HouseHoldIn,
     HouseHoldOut,
     InviteAcceptIn,
@@ -17,6 +16,7 @@ from apps.household.schemas import (
     InviteOut,
 )
 from apps.users.models import CustomUser, HouseHoldRole
+from apps.users.schemas import UserSchema
 
 from .services import accept_household_invite
 
@@ -99,9 +99,8 @@ def add_household_invite(request, data: InviteIn):
     return 200, invite
 
 
-@router.post("invite/accept/", auth=JWTAuth(), response={200: AcceptSchema})
+@router.post("invite/accept/", auth=JWTAuth(), response={200: UserSchema})
 def accept_invite(request, data: InviteAcceptIn):
-    membership = accept_household_invite(user=request.user, token=data.token)
-    return {
-        "household": membership.household,
-    }
+    accept_household_invite(user=request.user, token=data.token)
+    request.user.refresh_from_db()
+    return request.user

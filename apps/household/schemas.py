@@ -28,7 +28,3 @@ class InviteOut(Schema):
 
 class InviteAcceptIn(Schema):
     token: str
-
-
-class AcceptSchema(Schema):
-    household: HouseHoldOut
