@@ -24,3 +24,11 @@ class InviteOut(Schema):
     created_at: datetime
     expired_at: datetime | None
     revoke_at: datetime | None
+
+
+class InviteAcceptIn(Schema):
+    token: str
+
+
+class AcceptSchema(Schema):
+    household: HouseHoldOut

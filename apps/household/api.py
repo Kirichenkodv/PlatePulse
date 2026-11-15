@@ -8,8 +8,17 @@ from ninja_jwt.authentication import JWTAuth
 
 from apps.common.schemas import ErrorSchema
 from apps.household.models import HouseHold, HouseHoldInvite
-from apps.household.schemas import HouseHoldIn, HouseHoldOut, InviteIn, InviteOut
+from apps.household.schemas import (
+    AcceptSchema,
+    HouseHoldIn,
+    HouseHoldOut,
+    InviteAcceptIn,
+    InviteIn,
+    InviteOut,
+)
 from apps.users.models import CustomUser, HouseHoldRole
+
+from .services import accept_household_invite
 
 router = Router(tags=["HouseHold"])
 
@@ -88,3 +97,11 @@ def add_household_invite(request, data: InviteIn):
         # revoke_at: datetime
     )
     return 200, invite
+
+
+@router.post("invite/accept/", auth=JWTAuth(), response={200: AcceptSchema})
+def accept_invite(request, data: InviteAcceptIn):
+    membership = accept_household_invite(user=request.user, token=data.token)
+    return {
+        "household": membership.household,
+    }
