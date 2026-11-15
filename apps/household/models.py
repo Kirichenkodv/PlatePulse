@@ -41,3 +41,6 @@ class HouseHoldInvite(models.Model):
         blank=True,
         verbose_name="Когда отменили",
     )
+    acceted_at = models.DateTimeField(
+        null=True, blank=True, verbose_name="когда приняли."
+    )
