@@ -44,3 +44,10 @@ class HouseHoldInvite(models.Model):
     acceted_at = models.DateTimeField(
         null=True, blank=True, verbose_name="когда приняли."
     )
+
+    class Meta:
+        verbose_name = "Приглашение"
+        verbose_name_plural = "Приглашения"
+
+    def __str__(self) -> str:
+        return self.email
