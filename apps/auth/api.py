@@ -25,6 +25,7 @@ router = Router(
 
 @router.post(
     "register/",
+    description="Регистрирует нового пользователя по email и password.",
     response={
         200: TokenOut,
         422: ErrorOut,
