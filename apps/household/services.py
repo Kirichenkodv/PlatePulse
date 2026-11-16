@@ -9,12 +9,12 @@ from ninja.errors import HttpError
 from apps.household.models import HouseHoldInvite
 from apps.users.models import CustomUser, HouseHoldRole
 
-token = secrets.token_urlsafe(32)
-token_hash = hashlib.sha256(token.encode()).hexdigest()
-
 
 @transaction.atomic
 def create_invite(user: CustomUser, email: str):
+    token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+
     if user.household_role != HouseHoldRole.OWNER:
         return 409, {
             "code": "invite_error",
