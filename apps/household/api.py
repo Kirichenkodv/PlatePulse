@@ -21,13 +21,6 @@ from .services import accept_household_invite, create_invite
 router = Router(tags=["HouseHold"])
 
 
-@router.get("", response=list[HouseHoldOut])
-def get_households(request):
-    "Получение списка всех семей."
-    household = HouseHold.objects.all()
-    return 200, household
-
-
 @router.post(
     "",
     auth=JWTAuth(),
