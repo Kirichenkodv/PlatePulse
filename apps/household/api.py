@@ -1,13 +1,9 @@
-import hashlib
-import secrets
-from datetime import datetime, timedelta
-
 from django.db import transaction
 from ninja_extra import Router
 from ninja_jwt.authentication import JWTAuth
 
 from apps.common.schemas import ErrorSchema
-from apps.household.models import HouseHold, HouseHoldInvite
+from apps.household.models import HouseHold
 from apps.household.schemas import (
     HouseHoldIn,
     HouseHoldOut,
@@ -16,9 +12,9 @@ from apps.household.schemas import (
     InviteOut,
 )
 from apps.users.models import CustomUser, HouseHoldRole
-from apps.users.schemas import UserSchema
+from apps.users.schemas import UserOut
 
-from .services import accept_household_invite
+from .services import accept_household_invite, create_invite
 
 router = Router(tags=["HouseHold"])
 
@@ -36,6 +32,7 @@ def get_households(request):
     response={201: HouseHoldOut, 409: ErrorSchema},
 )
 def create_household(request, data: HouseHoldIn):
+    "Создание семьи."
     with transaction.atomic():
         user = CustomUser.objects.select_for_update().get(
             pk=request.auth.pk,
@@ -69,37 +66,15 @@ def get_household(request):
     }
 
 
-token = secrets.token_urlsafe(32)
-token_hash = hashlib.sha256(token.encode()).hexdigest()
-
-
 @router.post("invite/", auth=JWTAuth(), response={200: InviteOut, 409: ErrorSchema})
 def add_household_invite(request, data: InviteIn):
-    with transaction.atomic():
-        user_owner = CustomUser.objects.select_for_update().get(pk=request.auth.pk)
-    if user_owner.household_role != HouseHoldRole.OWNER:
-        return 409, {
-            "code": "invite_error",
-            "message": "Отправитель должен быть владельцем семьи.",
-        }
-    if user_owner.email == data.email:
-        return 409, {
-            "code": "email_error",
-            "message": "Отправитель не может отправить приглашение самому себе.",
-        }
-    invite = HouseHoldInvite.objects.create(
-        household=user_owner.household,
-        email=data.email,
-        invite_by=user_owner,
-        token_hash=token_hash,
-        created_at=datetime.now(),
-        expired_at=datetime.now() + timedelta(hours=24),
-        # revoke_at: datetime
-    )
+
+    user_owner = CustomUser.objects.get(pk=request.auth.pk)
+    invite = create_invite(user_owner, data.email)
     return 200, invite
 
 
-@router.post("invite/accept/", auth=JWTAuth(), response={200: UserSchema})
+@router.post("invite/accept/", auth=JWTAuth(), response={200: UserOut})
 def accept_invite(request, data: InviteAcceptIn):
     accept_household_invite(user=request.user, token=data.token)
     request.user.refresh_from_db()

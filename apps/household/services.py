@@ -1,9 +1,41 @@
+import hashlib
+import secrets
+from datetime import datetime, timedelta
+
 from django.db import transaction
 from django.utils import timezone
 from ninja.errors import HttpError
 
 from apps.household.models import HouseHoldInvite
 from apps.users.models import CustomUser, HouseHoldRole
+
+token = secrets.token_urlsafe(32)
+token_hash = hashlib.sha256(token.encode()).hexdigest()
+
+
+@transaction.atomic
+def create_invite(user: CustomUser, email: str):
+    if user.household_role != HouseHoldRole.OWNER:
+        return 409, {
+            "code": "invite_error",
+            "message": "Отправитель должен быть владельцем семьи.",
+        }
+    if user.email == email:
+        return 409, {
+            "code": "email_error",
+            "message": "Отправитель не может отправить приглашение самому себе.",
+        }
+    if user.household is None:
+        raise HttpError(400, "Отправитель должен быть в семье.")
+    invite = HouseHoldInvite.objects.create(
+        household=user.household,
+        email=email,
+        invite_by=user,
+        token_hash=token_hash,
+        created_at=datetime.now(),
+        expired_at=datetime.now() + timedelta(hours=24),
+    )
+    return invite
 
 
 @transaction.atomic
