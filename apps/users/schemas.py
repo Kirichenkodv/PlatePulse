@@ -3,7 +3,7 @@ from ninja import Schema
 from apps.household.schemas import HouseHoldOut
 
 
-class UserSchema(Schema):
+class UserOut(Schema):
     id: int
     email: str
     household: HouseHoldOut | None = None
