@@ -6,6 +6,7 @@ from ninja import Field, Schema
 class HouseHoldOut(Schema):
     id: int
     name: str
+    created_at: datetime
 
 
 class HouseHoldIn(Schema):

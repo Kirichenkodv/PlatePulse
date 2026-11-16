@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import transaction
 from ninja_extra import Router
 from ninja_jwt.authentication import JWTAuth
@@ -44,7 +46,10 @@ def create_household(request, data: HouseHoldIn):
                 "message": "Вы уже состоите в семье",
             }
 
-        household = HouseHold.objects.create(name=data.name)
+        household = HouseHold.objects.create(
+            name=data.name,
+            created_at=datetime.now(),
+        )
 
         user.household = household
         user.household_role = HouseHoldRole.OWNER
