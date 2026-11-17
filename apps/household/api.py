@@ -69,7 +69,7 @@ def add_household_invite(request, data: InviteIn):
 
     user_owner = CustomUser.objects.get(pk=request.auth.pk)
     invite = create_invite(user_owner, data.email)
-    return 200, invite
+    return invite
 
 
 @router.post("invite/accept/", auth=JWTAuth(), response={200: UserOut})
