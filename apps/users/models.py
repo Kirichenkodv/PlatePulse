@@ -28,10 +28,29 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+class HouseHoldRole(models.TextChoices):
+    OWNER = "owner", "Владелец"
+    MEMBER = "member", "Участник"
+
+
 class CustomUser(AbstractUser):
     username = None  # type: ignore[assignment]
     email = models.EmailField(
         unique=True,
+    )
+
+    household = models.ForeignKey(
+        "household.HouseHold",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="members",
+    )
+
+    household_role = models.CharField(
+        blank=True,
+        default="",
+        choices=HouseHoldRole.choices,
     )
 
     USERNAME_FIELD = "email"
