@@ -16,7 +16,7 @@ api = NinjaExtraAPI(
 ExceptionHandlers(api).register()
 
 
-api.add_router("system/", system_router)
+api.add_router("health/", system_router)
 api.add_router("auth/", auth_router)
 api.add_router("household/", household_router)
 api.add_router("user/", user_router)
